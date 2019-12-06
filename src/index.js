@@ -3,7 +3,18 @@ const figures = require('figures');
 const SQS = require('aws-sdk/clients/sqs');
 const {mapValues, isEmpty, forEach, map, has, filter, get, pipe} = require('lodash/fp');
 const {createHandler, getFunctionOptions} = require('serverless-offline/src/functionHelper');
-const createLambdaContext = require('serverless-offline/src/createLambdaContext');
+let createLambdaContext;
+
+try {
+    createLambdaContext = require('serverless-offline/src/createLambdaContext');
+} catch (e) {
+    try {
+        createLambdaContext = require('serverless-offline/src/LambdaContext');
+    } catch (e2) {
+        throw new error('Unable to fine lambda context file');
+    }
+
+}
 
 const fromCallback = fun =>
   new Promise((resolve, reject) => {
